@@ -8,19 +8,13 @@ const appointmentController=require("../controllers/appointment")
 
 router.get("/", appointmentController.getbooking)
 
-console.log(router.post("/",appointmentController.postAddbooking))
+router.post("/appointment",appointmentController.postAddbooking)
 
-router.delete("/",appointmentController.deletebooking)
+router.get('/previous-bookings',appointmentController.getPreviousBookings)
 
-// router.get("/", (req, res, next) => {
-//   res.sendFile(path.join(rootDir, "views", "appointment.html"));
-// });
+router.delete('/delete-booking/:id',appointmentController.deletebooking)
 
-// router.post("/", (req, res, next) => {
-//   console.log(JSON.stringify(req.body));
-//   res.redirect("/");
-// });
-
+router.delete('/appointment/:id',appointmentController.Editbooking)
 
 module.exports = router;
 

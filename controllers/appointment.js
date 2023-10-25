@@ -1,80 +1,91 @@
+const path = require("path")
+const booking = require("../models/booking")
 
-const booking=require("../models/booking")
-
-exports.getbooking= async (req,res,next)=>{
-    try{
-        const bookings=await booking.findAll();
-        res.json(bookings)
-    }catch(err){
+exports.getbooking = async (req, res, next) => {
+    try {
+        // const Booking=await booking.findAll();
+        // res.json(Booking)
+        res.sendFile(path.join(__dirname, "../views/appointment.html"))
+    } catch (err) {
         console.log(err);
-        res.status(500).json({error:"Internal server error"})
+        res.status(500).json({ error: "Internal server error" })
     }
 }
 
-// exports.createbooking=async (req,res,next)=>{
-//     try{
-//         const {name,email,phone}=req.body;
-//         const bookings=await req.user.createbooking({name, email,phone});
-//         res.json(bookings)
-//     }catch(error){
-//         console.log(error)
-//         res.status(500).json({error:"Internal server error"})
-//     }
-// }
+exports.getPreviousBookings = async (req, res, next) => {
+    try {
+        const appointments = await booking.findAll();
+        console.log(appointments)
+        res.status(200).json({ appointments: appointments })
 
-exports.postAddbooking=(req,res,next)=>{
-    // console.log(req,"post request is succesfully")
-    const name = req.body.name;
-    const email = req.body.email;
-    const phonenumber = req.body.phonenumber;
-    booking.create({
-        name:name,
-        email:email,
-        phonenumber:phonenumber
-    }).then(result=>{
-        console.log("Booking added")
-        res.redirect('/')
-    }).catch(err=>{
+    } catch (err) {
         console.log(err)
-    })
+        res.status(500).json({ success: 'false' })
+    }
 }
 
-exports.Editbooking=async(req,res)=>{
-    
-    try{
-        const {id}=req.params;
-        const {name,email,phonenumber}=req.body;
-        const bookingss=await booking.findByPk(id)
+exports.postAddbooking = async (req, res, next) => {
+    try {
+        console.log("post request is succesfully")
+        console.log(req.body)
+        console.log('hii')
 
-        if(!bookingss){
-            res.status(404).json({error:"booking is not found"})
+        const name = req.body.name;
+        const email = req.body.email;
+        const phonenumber = req.body.phonenumber;
+
+        const appointmentDetails = await booking.create({
+            name: name,
+            email: email,
+            phonenumber: phonenumber
+        })
+
+        console.log(req.body)
+
+        res.status(200).json({ message: "appointment booked successfully", appointmentDetails: appointmentDetails })
+
+    } catch (err) {
+        res.status(500).json({success:'false',error:err})
+    }
+
+}
+
+exports.Editbooking = async (req, res) => {
+
+    try {
+        const { id } = req.params;
+        const { name, email, phonenumber } = req.body;
+        const Booking = await booking.findByPk(id)
+
+        if (!Booking) {
+            res.status(404).json({ error: "booking is not found" })
             return
         }
-        bookingss.name=name;
-        bookingss.email=email;
-        bookingss.phonenumber=phonenumber;
-        await bookingss.save()
-        res.json(bookingss);
-    }catch(err){
+        Booking.name = name;
+        Booking.email = email;
+        Booking.phonenumber = phonenumber;
+        await Booking.save()
+        res.json({message:"edit Item successfully"});
+    } catch (err) {
         console.log(err)
-        res.status(500).json({error:"Internal server error"})
+        res.status(500).json({ error: "Internal server error" })
     }
 }
 
-exports.deletebooking=async(req,res)=>{
-try{
-    const {id}=req.params;
-    const bookings=await booking.findByPk(id);
+exports.deletebooking = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const Booking = await booking.findByPk(id);
 
-    if(!bookings){
-        res.status(404).json({error:"booking is not found"})
-        return;
+        if (!Booking) {
+            res.status(404).json({ error: "booking is not found" })
+            return;
+        }
+
+        await Booking.destroy()
+        res.json({ message: "Booking deleted successfully" })
+    } catch (err) {
+        console.log(err)
+        res.status(500).json({ error: "Internal server error" })
     }
-
-    await bookings.destroy()
-    res.json({message:"Booking deleted successfully"})
-}catch(err){
-    console.log(err)
-    res.status(500).json({error:"Internal server error"})
-}
 }

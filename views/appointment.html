@@ -7,15 +7,20 @@
    
 </head>
 <body>
-    <form action="/" method="POST">
+    <form  id="appointmentform">
         <label>Name:</label>
-        <input type="text"  name="name" placeholder="Enter your name">
+        <input type="text"  name="name" placeholder="Enter your name" id="name">
         <label>Email:</label>
-        <input type="email"  name="email" placeholder="Enter your email">
+        <input type="email"  name="email" placeholder="Enter your email" id="email">
         <label>Phone Number:</label>
-        <input type="number"  name="phonenumber" placeholder="Enter your phone number">
+        <input type="number"  name="phonenumber" placeholder="Enter your phone number" id="phone">
 
         <button type="submit">Submit</button>
+        
+        <ul id="itemList"></ul>
     </form>
+    
+    <script defer src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/appointment.js"></script>
 </body>
 </html>
