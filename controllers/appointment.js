@@ -52,24 +52,28 @@ exports.postAddbooking = async (req, res, next) => {
 
 exports.Editbooking = async (req, res) => {
 
-    try {
-        const { id } = req.params;
-        const { name, email, phonenumber } = req.body;
-        const Booking = await booking.findByPk(id)
-
-        if (!Booking) {
-            res.status(404).json({ error: "booking is not found" })
-            return
-        }
-        Booking.name = name;
-        Booking.email = email;
-        Booking.phonenumber = phonenumber;
-        await Booking.save()
-        res.json({message:"edit Item successfully"});
-    } catch (err) {
-        console.log(err)
-        res.status(500).json({ error: "Internal server error" })
+    const { id } = req.params;
+const { name, email, phonenumber } = req.body;
+console.log(req.body)
+try {
+    const Booking = await booking.findByPk(id);
+    if (!Booking) {
+        res.status(404).json({ error: "Booking not found" });
+        return;
     }
+
+    Booking.name = name;
+    Booking.email = email;
+    Booking.phonenumber = phonenumber;
+
+    await Booking.save();
+
+    res.json({ message: "Booking updated successfully" });
+} catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+}
+
 }
 
 exports.deletebooking = async (req, res) => {

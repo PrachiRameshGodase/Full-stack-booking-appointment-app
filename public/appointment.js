@@ -89,12 +89,12 @@ form.addEventListener("submit", async (e) => {
 // }
 
 
-// const clearInputFields = () => {
-//   document.getElementById("name").value='';
-//   document.getElementById("email").value='';
-//   document.getElementById("phone").value='';
+const clearInputFields = () => {
+  document.getElementById("name").value='';
+  document.getElementById("email").value='';
+  document.getElementById("phone").value='';
 
-// }
+}
 async function showUserOnScreen() {
   const itemList = document.getElementById("itemList");
   itemList.innerHTML="";
@@ -127,9 +127,14 @@ console.log(appoinment.phonenumber)
   
   //add eventListener with arrow
   editbtn.onclick = async() => {
-    const response=await axios.delete(`http://localhost:3000/appointment/${appoinment.id}`)
-    console.log(response.data)
+    const updatedData = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      phonenumber: document.getElementById('phone').value
+  };
 
+  const response = await axios.put(`http://localhost:3000/booking/${appoinment.id}`, updatedData);
+  console.log(response.data);
 
     itemList.removeChild(li);
     //populating userdetails
@@ -142,6 +147,8 @@ console.log(appoinment.phonenumber)
   li.appendChild(editbtn) 
   itemList.appendChild(li); 
 }
+
+clearInputFields()
 }
 //reload the all deatilsS
 document.addEventListener("DOMContentLoaded",async()=>{
